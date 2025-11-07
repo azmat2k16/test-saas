@@ -1,0 +1,5 @@
+{
+  "name": "saas",
+  "description": "A multi-tenant e-commerce platform allowing different stores to list and sell products under one site, simulating a SaaS application architecture.",
+  "requestFramePermissions": []
+}
