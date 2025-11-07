@@ -10,7 +10,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ user, onLogout, currentPage, setCurrentPage }) => {
-    const navItems: { id: AdminPage; label: string; icon: JSX.Element }[] = [
+    // FIX: Changed JSX.Element to React.ReactElement to resolve namespace error.
+    const navItems: { id: AdminPage; label: string; icon: React.ReactElement }[] = [
         { id: 'dashboard', label: 'Dashboard', icon: <HomeIcon /> },
         { id: 'products', label: 'Products', icon: <PackageIcon /> },
         { id: 'orders', label: 'Orders', icon: <ShoppingCartIcon /> },

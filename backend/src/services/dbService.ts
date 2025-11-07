@@ -1,70 +1,143 @@
-import { Product, Tenant, User, Order } from '../../../shared/types';
+import { User, Tenant, Product, Order, Theme, UserRole } from "../../../shared/types";
 
 // --- MOCK DATA ---
-// This data simulates what would be stored in a real database.
 
-const tenants: Tenant[] = [
-    {
-        id: 'tech-gear',
-        name: 'TechGear',
-        logoUrl: 'https://placehold.co/150x150/0ea5e9/white?text=TG',
-        theme: {
-            primaryColor: 'bg-slate-800',
-            secondaryColor: 'bg-slate-700',
-            accentColor: 'bg-cyan-500',
-            textColor: 'text-white',
-            backgroundColor: 'bg-slate-900',
-        },
+const themes: { [key: string]: Theme } = {
+    'retro_funk': {
+        primaryColor: 'bg-indigo-600',
+        secondaryColor: 'bg-slate-800',
+        accentColor: 'bg-pink-500',
+        textColor: 'text-white',
+        backgroundColor: 'bg-slate-900',
     },
-    {
-        id: 'fashion-hub',
-        name: 'FashionHub',
-        logoUrl: 'https://placehold.co/150x150/ec4899/white?text=FH',
-        theme: {
-            primaryColor: 'bg-pink-500',
-            secondaryColor: 'bg-pink-400',
-            accentColor: 'bg-purple-500',
-            textColor: 'text-white',
-            backgroundColor: 'bg-gray-100',
-        },
+    'eco_friendly': {
+        primaryColor: 'bg-green-700',
+        secondaryColor: 'bg-gray-100',
+        accentColor: 'bg-yellow-500',
+        textColor: 'text-gray-800',
+        backgroundColor: 'bg-white',
     },
+};
+
+let tenants: Tenant[] = [
+    { id: 't_retro', name: 'Retro Funk', logoUrl: '/logos/retro-funk.png', theme: themes['retro_funk'] },
+    { id: 't_green', name: 'GreenLeaf Organics', logoUrl: '/logos/greenleaf.png', theme: themes['eco_friendly'] },
 ];
 
-const products: Product[] = [
-    // TechGear Products
-    { id: 1, tenantId: 'tech-gear', name: 'Quantum Keyboard', description: 'A mechanical keyboard with RGB lighting.', price: 129.99, imageUrl: 'https://placehold.co/400x300/334155/e2e8f0?text=Keyboard', category: 'Peripherals' },
-    { id: 2, tenantId: 'tech-gear', name: 'Nebula Mouse', description: 'Ergonomic gaming mouse with high DPI.', price: 79.99, imageUrl: 'https://placehold.co/400x300/334155/e2e8f0?text=Mouse', category: 'Peripherals' },
-    { id: 3, tenantId: 'tech-gear', name: 'Galaxy Headset', description: 'Wireless headset with 7.1 surround sound.', price: 199.99, imageUrl: 'https://placehold.co/400x300/334155/e2e8f0?text=Headset', category: 'Audio' },
-    { id: 4, tenantId: 'tech-gear', name: 'Starship Monitor', description: '27-inch 4K UHD monitor for crisp visuals.', price: 499.99, imageUrl: 'https://placehold.co/400x300/334155/e2e8f0?text=Monitor', category: 'Displays' },
-    
-    // FashionHub Products
-    { id: 5, tenantId: 'fashion-hub', name: 'Urban Explorer Jacket', description: 'Stylish and durable for city life.', price: 150.00, imageUrl: 'https://placehold.co/400x300/f472b6/ffffff?text=Jacket', category: 'Apparel' },
-    { id: 6, tenantId: 'fashion-hub', name: 'Classic Chronograph Watch', description: 'An elegant timepiece for any occasion.', price: 250.00, imageUrl: 'https://placehold.co/400x300/f472b6/ffffff?text=Watch', category: 'Accessories' },
+let products: Product[] = [
+    // Retro Funk Products
+    { id: 1, tenantId: 't_retro', name: '8-bit Sunglasses', description: 'Pixel-perfect shades for a nostalgic vibe.', price: 24.99, imageUrl: '/products/sunglasses.jpg', category: 'Accessories' },
+    { id: 2, tenantId: 't_retro', name: 'Cassette Player', description: 'A classic portable music player. Mixtape not included.', price: 49.99, imageUrl: '/products/cassette.jpg', category: 'Electronics' },
+    // GreenLeaf Organics Products
+    { id: 3, tenantId: 't_green', name: 'Organic Honey', description: 'Pure, raw honey from ethically-treated bees.', price: 12.50, imageUrl: '/products/honey.jpg', category: 'Groceries' },
+    { id: 4, tenantId: 't_green', name: 'Bamboo Toothbrush Set', description: 'Eco-friendly dental care for the whole family.', price: 9.99, imageUrl: '/products/toothbrush.jpg', category: 'Personal Care' },
 ];
 
-const users: User[] = [
-    { id: 'user-cust1', email: 'customer@example.com', role: 'customer' },
-    { id: 'user-store1', email: 'store-owner@example.com', role: 'store', tenantId: 'tech-gear' },
+let users: User[] = [
+    { id: 'u_customer_1', email: 'customer@test.com', role: 'customer' },
+    { id: 'u_store_1', email: 'store@test.com', role: 'store', tenantId: 't_retro' },
+    { id: 'u_store_2', email: 'newstore@test.com', role: 'store' }, // No tenantId yet
 ];
 
-// Using plain text passwords for mock environment simplicity.
-// In a real application, NEVER store passwords in plain text. Always hash them.
-const userPasswords = new Map<string, string>([
-    ['customer@example.com', 'password123'],
-    ['store-owner@example.com', 'password123'],
-]);
-
-const orders: Order[] = [
-    { id: 'ord-1', customerName: 'Alice Johnson', date: '2023-10-26', total: 209.98, status: 'Shipped', items: [{productName: 'Quantum Keyboard', quantity: 1}, {productName: 'Nebula Mouse', quantity: 1}] },
-    { id: 'ord-2', customerName: 'Bob Williams', date: '2023-10-25', total: 199.99, status: 'Delivered', items: [{productName: 'Galaxy Headset', quantity: 1}] },
-    { id: 'ord-3', customerName: 'Charlie Brown', date: '2023-10-27', total: 499.99, status: 'Pending', items: [{productName: 'Starship Monitor', quantity: 1}] },
+let orders: Order[] = [
+    { id: 'o_1', customerName: 'John Doe', date: '2023-10-26', total: 74.98, status: 'Shipped', items: [{ productName: '8-bit Sunglasses', quantity: 1 }, { productName: 'Cassette Player', quantity: 1 }] },
+    { id: 'o_2', customerName: 'Jane Smith', date: '2023-10-27', total: 25.00, status: 'Pending', items: [{ productName: 'Organic Honey', quantity: 2 }] },
 ];
 
-// Export all mock data collections in a single 'db' object
-export const db = {
-    tenants,
-    products,
-    users,
-    userPasswords,
-    orders
+// --- MOCK DB FUNCTIONS ---
+
+// FIX: This function now correctly handles 'undefined' data without crashing.
+const simulateDelay = <T>(data: T): Promise<T> =>
+    new Promise(resolve => setTimeout(() => {
+        // The JSON parse/stringify is a deep clone to prevent mutation.
+        // It fails for `undefined`, which is a valid result for `find` operations.
+        if (typeof data === 'undefined') {
+            resolve(data);
+            return;
+        }
+        resolve(JSON.parse(JSON.stringify(data)));
+    }, 500));
+
+
+// User Functions
+export const findUserByEmail = async (email: string): Promise<User | undefined> => {
+    return simulateDelay(users.find(u => u.email === email));
+};
+
+export const createUser = async (email: string, role: UserRole): Promise<User> => {
+    const newUser: User = {
+        id: `u_${Date.now()}`,
+        email,
+        role,
+    };
+    users.push(newUser);
+    return simulateDelay(newUser);
+};
+
+export const updateUser = async (updatedUser: User): Promise<User> => {
+    const userIndex = users.findIndex(u => u.id === updatedUser.id);
+    if (userIndex === -1) {
+        throw new Error("User not found for update");
+    }
+    users[userIndex] = updatedUser;
+    return simulateDelay(users[userIndex]);
+};
+
+
+// Tenant Functions
+export const createTenant = async (name: string): Promise<Tenant> => {
+    const newTenant: Tenant = {
+        id: `t_${Date.now()}`,
+        name,
+        logoUrl: '/logos/default-logo.png', // A default logo for new stores
+        theme: themes['retro_funk'],       // A default theme
+    };
+    tenants.push(newTenant);
+    return simulateDelay(newTenant);
+};
+
+export const getTenants = async (): Promise<Tenant[]> => {
+    return simulateDelay(tenants);
+};
+
+export const getTenantById = async (tenantId: string): Promise<Tenant | undefined> => {
+    return simulateDelay(tenants.find(t => t.id === tenantId));
+};
+
+// Product Functions
+export const getProductsByTenantId = async (tenantId: string): Promise<Product[]> => {
+    return simulateDelay(products.filter(p => p.tenantId === tenantId));
+};
+
+export const addProduct = async (tenantId: string, productData: Omit<Product, 'id' | 'tenantId'>): Promise<Product> => {
+    const newProduct: Product = {
+        ...productData,
+        id: Math.max(...products.map(p => p.id), 0) + 1,
+        tenantId,
+    };
+    products.push(newProduct);
+    return simulateDelay(newProduct);
+};
+
+export const updateProduct = async (tenantId: string, updatedProduct: Product): Promise<Product> => {
+    const index = products.findIndex(p => p.id === updatedProduct.id && p.tenantId === tenantId);
+    if (index === -1) throw new Error("Product not found");
+    products[index] = updatedProduct;
+    return simulateDelay(updatedProduct);
+};
+
+export const deleteProduct = async (tenantId: string, productId: number): Promise<{ id: number }> => {
+    const initialLength = products.length;
+    products = products.filter(p => !(p.id === productId && p.tenantId === tenantId));
+    if (products.length === initialLength) throw new Error("Product not found");
+    return simulateDelay({ id: productId });
+};
+
+// Order Functions
+export const getOrdersByTenantId = async (tenantId: string): Promise<Order[]> => {
+    // This is a simplification; in reality, orders would be linked to products of a tenant.
+    // For this mock, we'll just return some orders. A real implementation would be more complex.
+    const tenantProducts = products.filter(p => p.tenantId === tenantId).map(p => p.name);
+    const tenantOrders = orders.filter(o => o.items.some(item => tenantProducts.includes(item.productName)));
+    return simulateDelay(tenantOrders);
 };
